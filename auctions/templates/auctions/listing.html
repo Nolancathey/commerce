@@ -1,0 +1,41 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>List items</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+    
+    <form action="{% url 'auctions:listing' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input autofocus class="form-control" type="text" name="title" id="title" placeholder="title">
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <input class="form-control" type="text" name="description" id="description" placeholder="Description">
+        </div>
+        <div class="form-group">
+            <label for="imageUrl">Image Url:</label>
+            <input class="form-control" type="text" name="imageUrl" id="imageUrl" placeholder="Image Url">
+        </div>
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <input class="form-control" type="number" name="price" id="price" placeholder="Price">
+        </div>
+        <div>
+            <label for="options">Select a category:</label>
+            <select id="options" name="category">
+              <option value="monitors">monitors</option>
+              <option value="mouse">mouse</option>
+              <option value="keyboards">keyboards</option>
+              <option value="mouse pad">mouse pad</option>
+            </select>
+        </div>
+            
+          
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+{% endblock %}

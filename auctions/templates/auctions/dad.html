@@ -1,0 +1,38 @@
+def index(request):
+    listing = Listing.objects.filter(isActive=True)
+    if 'unlist' in request.POST and request.POST['unlist'] is not None:
+        try:
+            title = request.POST['unlist']
+            item = Listing.objects.get(title=title)
+            highest_bid = Bid.objects.filter(item=item).order_by('-amount').first()
+            item.isActive = False
+
+            if highest_bid:
+                bid = highest_bid.bidder
+                message = f"The auction for {item.title} has ended. {bid} won the auction with a bid of {highest_bid.amount}."
+            else:
+                message = f"The auction for {item.title} has ended. No one won the auction."
+        except Listing.DoesNotExist:
+            message = f"The item {title} does not exist."
+    else:
+        message = ""
+    return render(request, "auctions/index.html", {'message': message, 'listing': listing})
+
+
+    def index(request):
+    listing = Listing.objects.filter(isActive=True)
+    if 'unlist' in request.POST and request.POST['unlist'] is not None:
+            title = request.POST['unlist']
+            title = Listing.objects.get(title=title)
+            highest_bid = Bid.objects.filter(item=title).order_by('-amount').first()
+            title.isActive = False
+
+            if highest_bid:
+                bid = highest_bid.bidder
+                message = f"This item is no longer available {bid} won this auction for {title.title}!!"
+                return render(request, "auctions/index.html", {' message':  message, 'listing': listing})
+            else:
+                message = f"This item is no longer available nobody won this auction for {title.title}!!"
+                return render(request, "auctions/index.html", {' message':  message, 'listing': listing})
+    else:
+        return render(request, "auctions/index.html", {'listing': listing})

@@ -1,0 +1,33 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    
+    <form action="{% url 'auctions:category' %}" method="POST">
+      {% csrf_token %}
+      <label for="options">Select a category:</label>
+            <select id="options" name="category">
+              <option value="monitors">monitors</option>
+              <option value="mouse">mouse</option>
+              <option value="keyboards">keyboards</option>
+              <option value="mouse pad">mouse pad</option>
+            </select>
+        <button type="submit">Select</button>
+      </form>
+
+    <div class="row">
+      {% if message %}
+        <h2>{{message }}</h2>
+      {% endif %}
+      {% for list in listing %}
+        <div class="col-md-2 border border-black">
+            <p><a href="{% url 'auctions:item' title=list.title %}">{{ list }}</a></p>
+            <img src="{{ list.imageUrl }}" width="200" height="150">
+            <p>{{ list.description }}</p>
+            <p>${{ list.price }}</p>
+        </div>
+      {% endfor %}
+    </div>
+    
+{% endblock %}

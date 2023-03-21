@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>My Wishlist</h2>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+    <div class="row">
+        {% for item in wishlist %}
+          <div class="col-md-2 border border-black">
+              <p><a href="{% url 'auctions:item' title=item.listItem.title %}">{{ item.listItem }}</a></p>
+              <img src="{{ item.listItem.imageUrl }}" width="200" height="150">
+              <p>{{ item.listItem.description }}</p>
+              <p>${{ item.listItem.price }}</p>
+              <form method="POST" action="{% url 'auctions:wishlist' %}">
+                {% csrf_token %}
+                <input type="hidden" name="delete" value="{{ item.listItem.title }}">
+                <button type="submit"  class="btn btn-primary">Delete from Wishlist</button>
+            </form>
+          </div>
+        {% endfor %}
+    </div>
+    
+{% endblock %}

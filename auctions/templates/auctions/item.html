@@ -1,0 +1,58 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{{ data.imageUrl }}" width="100%" height="300">
+        </div>
+        <div class="col-md-8">
+            <h2>{{ data.title }}</h2>
+            <p>{{ data.description }}</p>
+            <hr>
+            <label>Price:</label>
+            <p>${{ data.price }}</p>
+            <label>Category:</label>
+            <p>{{ data.category }}</p>
+            <label>Owner:</label>
+            <p> {{ data.owner }}</p>
+        </div>
+    </div>
+    {% if user.is_authenticated %}
+    <form method="POST" action="{% url 'auctions:index' %}">
+        {% csrf_token %}
+        <input type="hidden" name="unlist" value="{{ data.title }}">
+        <button class="btn btn-danger">Unlistitem</button>
+    </form>
+    {% endif %}
+    <form method="POST" action="{% url 'auctions:wishlist' %}">
+        {% csrf_token %}
+        <input type="hidden" name="title" value="{{ data.title }}">
+        <button type="submit"  class="btn btn-primary">Add to Wishlist</button>
+    </form>
+    {% if data.title is not none %}
+    <h2>Bid on {{ item.title }}</h2>
+        <p>Current highest bid: ${{ highest_bid }}</p>
+        <form method="post" action="{% url 'auctions:bid' title=data.title %}">
+            {% csrf_token %}
+            <label for="price">Price:</label>
+            <input class="form-control" type="number" name="bid" id="price" placeholder="Ammount">
+            <button type="submit" class="btn btn-primary">Place Bid</button>
+        </form>
+        <div>
+            <form method="post" action="{% url 'auctions:item' title=data.title %}">
+            {% csrf_token %}
+            <label for="comment">Comment:</label>
+            <textarea class="form-control" type="text" name="comment" id="comment" placeholder="Comment" rows="3"></textarea>
+            <button type="submit" class="btn btn-primary">Enter</button>
+            </form>
+            {% endif %}
+            {% for com in comment %} 
+            <ul>
+                <li>{{ com.comment_user }}: {{ com.comment }}</li>
+            </ul>
+            {% endfor %}
+        </div>
+</div>
+    
+{% endblock %}
